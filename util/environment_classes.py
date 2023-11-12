@@ -188,6 +188,10 @@ class waterworld_ppo():
         if not os.path.exists(self.reward_csv_file):
             print('No data found from evaluation loops. Run eval() or interlace_run()')
             return -1
+        
+        # Create a directory to save plots if it doesn't exist
+        plot_dir = os.path.join(self.log_dir,'plots')
+        os.makedirs(plot_dir, exist_ok=True)
 
         log_pd = pd.read_csv(self.reward_csv_file) # easier than csv reader
         games = log_pd['GameNumber'].unique()
@@ -233,6 +237,12 @@ class waterworld_ppo():
             axs[ii_agent].set_ylabel('Total Rewards per Game')
             axs[ii_agent].set_title(f'Rewards for 10 different games, {agent}')
         axs[-1].set_xlabel('Training Step')
+        
+        
+        # Save each plot to the folder
+        fig_stack_mean.savefig(os.path.join(plot_dir, 'stacked_mean_rewards.png'))
+        fig_sd.savefig(os.path.join(plot_dir, 'mean_rewards_with_sd.png'))
+        fig.savefig(os.path.join(plot_dir, 'individual_game_rewards.png'))
 
 
 
